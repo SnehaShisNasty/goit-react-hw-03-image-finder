@@ -62,7 +62,7 @@ class App extends Component {
   };
 
   render() {
-    const { list, total, page } = this.state;
+    const { list, total, page, loading } = this.state;
 
     const isImg = Boolean(list.length) && 12 * page < total;
 
@@ -73,7 +73,7 @@ class App extends Component {
         <ImageGallery>
           <ImageItem data={list}></ImageItem>
         </ImageGallery>
-        {this.state.loading && <Loading></Loading>}
+        {loading && <Loading></Loading>}
         {isImg && <Button onClick={this.loadMore}></Button>}
       </Main>
     );
