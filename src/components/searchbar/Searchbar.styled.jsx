@@ -58,6 +58,7 @@ const ButtonLabel = styled.span`
 const Input = styled.input`
   display: inline-block;
   width: 100%;
+  height: 100%;
   font: inherit;
   font-size: 20px;
   border: none;

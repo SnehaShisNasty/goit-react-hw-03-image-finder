@@ -3,8 +3,12 @@ import { Component } from 'react';
 import { Main } from './App.styled';
 
 import { Searchbar } from './searchbar/Searchbar';
+import { ImageGallery } from './imageGallery/ImageGallery';
 
 import { searchImgs } from './api/server';
+import { ImageItem } from './imageGallery/imageItem/ImageItem';
+import { Button } from './button/Button';
+import { Loading } from './loading/Loading';
 
 class App extends Component {
   state = {
@@ -12,6 +16,7 @@ class App extends Component {
     page: 1,
     loading: false,
     list: [],
+    total: null,
   };
 
   async componentDidUpdate(_, prevState) {
@@ -19,7 +24,6 @@ class App extends Component {
     if (search && (search !== prevState.search || page !== prevState.page)) {
       this.serverImgs();
     }
-    console.log(this.state);
   }
 
   async serverImgs() {
@@ -29,8 +33,9 @@ class App extends Component {
         loading: true,
       });
       const { data } = await searchImgs(search, page);
-      console.log(data.hits);
-      this.setState(({ list }) => ({
+
+      this.setState(({ list, total }) => ({
+        total: data.total,
         list: [...list, ...data.hits],
       }));
     } catch (error) {
@@ -40,6 +45,7 @@ class App extends Component {
     } finally {
       this.setState({
         loading: false,
+        search: '',
       });
     }
   }
@@ -51,11 +57,24 @@ class App extends Component {
       page: 1,
     });
   };
+  loadMore = () => {
+    this.setState(({ page }) => ({ page: page + 1 }));
+  };
 
   render() {
+    const { list, total, page } = this.state;
+
+    const isImg = Boolean(list.length) && 12 * page < total;
+
     return (
       <Main>
         <Searchbar onSubmit={this.handleSearch}></Searchbar>
+
+        <ImageGallery>
+          <ImageItem data={list}></ImageItem>
+        </ImageGallery>
+        {this.state.loading && <Loading></Loading>}
+        {isImg && <Button onClick={this.loadMore}></Button>}
       </Main>
     );
   }
