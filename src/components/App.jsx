@@ -27,6 +27,7 @@ class App extends Component {
   }
 
   async serverImgs() {
+    console.log(1);
     const { search, page } = this.state;
     try {
       this.setState({
@@ -45,7 +46,6 @@ class App extends Component {
     } finally {
       this.setState({
         loading: false,
-        search: '',
       });
     }
   }

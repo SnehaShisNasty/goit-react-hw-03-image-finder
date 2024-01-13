@@ -15,9 +15,7 @@ class Searchbar extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.onSubmit({ ...this.state });
-    this.setState({
-      search: '',
-    });
+    this.setState({ search: '' });
   };
   render() {
     return (
@@ -32,6 +30,7 @@ class Searchbar extends Component {
             placeholder="Search images and photos"
             name="search"
             onChange={this.handleChange}
+            value={this.state.search}
           />
         </Form>
       </Header>
