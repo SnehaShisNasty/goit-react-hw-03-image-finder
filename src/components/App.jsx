@@ -4,11 +4,12 @@ import { Main } from './App.styled';
 
 import { Searchbar } from './searchbar/Searchbar';
 import { ImageGallery } from './imageGallery/ImageGallery';
-
-import { searchImgs } from './api/server';
 import { ImageItem } from './imageGallery/imageItem/ImageItem';
 import { Button } from './button/Button';
 import { Loading } from './loading/Loading';
+
+import { searchImgs } from './api/server';
+import { Modal } from './modal/Modal';
 
 class App extends Component {
   state = {
@@ -17,12 +18,17 @@ class App extends Component {
     loading: false,
     list: [],
     total: null,
+    modal: {
+      isModal: false,
+      modalImg: '',
+    },
   };
 
   async componentDidUpdate(_, prevState) {
     const { search, page } = this.state;
     if (search && (search !== prevState.search || page !== prevState.page)) {
       this.serverImgs();
+      console.log(this.state);
     }
   }
 
@@ -60,9 +66,24 @@ class App extends Component {
   loadMore = () => {
     this.setState(({ page }) => ({ page: page + 1 }));
   };
+  showModal = link => {
+    this.setState({
+      modal: {
+        isModal: true,
+        modalImg: link,
+      },
+    });
+  };
+  closeModal = () => {
+    this.setState({
+      modal: {
+        isModal: false,
+      },
+    });
+  };
 
   render() {
-    const { list, total, page, loading } = this.state;
+    const { list, total, page, loading, modal } = this.state;
 
     const isImg = Boolean(list.length) && 12 * page < total;
 
@@ -71,10 +92,11 @@ class App extends Component {
         <Searchbar onSubmit={this.handleSearch}></Searchbar>
 
         <ImageGallery>
-          <ImageItem data={list}></ImageItem>
+          <ImageItem data={list} showModal={this.showModal}></ImageItem>
         </ImageGallery>
         {loading && <Loading></Loading>}
         {isImg && <Button onClick={this.loadMore}></Button>}
+        {modal.isModal && <Modal modal={modal} close={this.closeModal}></Modal>}
       </Main>
     );
   }
