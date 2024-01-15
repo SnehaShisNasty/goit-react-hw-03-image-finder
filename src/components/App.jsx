@@ -18,6 +18,7 @@ class App extends Component {
     loading: false,
     list: [],
     total: null,
+    prevSearch: '',
     modal: {
       isModal: false,
       modalImg: '',
@@ -28,12 +29,15 @@ class App extends Component {
     const { search, page } = this.state;
     if (search && (search !== prevState.search || page !== prevState.page)) {
       this.serverImgs();
-      console.log(this.state);
+      // console.log('this.state', this.state);
+    } else {
+      // console.log('search', search);
+      // console.log('prevState.search', prevState.search);
     }
   }
 
   async serverImgs() {
-    console.log(1);
+    // console.log(1);
     const { search, page } = this.state;
     try {
       this.setState({
@@ -57,11 +61,14 @@ class App extends Component {
   }
 
   handleSearch = ({ search }) => {
-    this.setState({
-      search,
-      list: [],
-      page: 1,
-    });
+    // console.log(2);
+    if (search !== '') {
+      this.setState({
+        search,
+        list: [],
+        page: 1,
+      });
+    }
   };
   loadMore = () => {
     this.setState(({ page }) => ({ page: page + 1 }));

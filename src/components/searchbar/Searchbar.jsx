@@ -4,6 +4,7 @@ import { Header, Form, Button, ButtonLabel, Input } from './Searchbar.styled';
 class Searchbar extends Component {
   state = {
     search: '',
+    preSearch: '',
   };
 
   handleChange = ({ target }) => {
@@ -14,10 +15,16 @@ class Searchbar extends Component {
   };
   handleSubmit = e => {
     e.preventDefault();
-    this.props.onSubmit({ ...this.state });
+    if (this.state.preSearch !== this.state.search) {
+      this.props.onSubmit({ ...this.state });
+    }
+    this.setState({
+      preSearch: this.state.search,
+    });
     this.setState({ search: '' });
   };
   render() {
+    console.log(this.state);
     return (
       <Header>
         <Form onSubmit={this.handleSubmit}>
